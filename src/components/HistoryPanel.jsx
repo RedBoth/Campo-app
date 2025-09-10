@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro }) {
+export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, hojaActiva }) {
     const [texto, setTexto] = useState("");
     const historialRef = useRef(null);
 
@@ -36,7 +36,7 @@ export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro }) {
     
     return (
         <div className="p-4 bg-white border rounded shadow flex flex-col gap-4">
-            <h2 className="text-lg font-bold">Historial - {loteSeleccionado.nombre}</h2>
+            <h2 className="text-lg font-bold">{hojaActiva.nombre} - Historial - {loteSeleccionado.nombre}</h2>
 
             {/* Lista de registros */}
             <div className="flex flex-col gap-2 max-h-[200px] overflow-y-auto border p-2 rounded bg-gray-50" ref={historialRef}>
