@@ -16,7 +16,7 @@ export default function PageActions({ hojas, setHojas, hojaActiva, setHojaActiva
                     setHojaActivaId(nuevasHojas[0].id);
                     setLoteSeleccionado(null);
                 }
-            }} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+            }} className="bg-danger text-white px-4 py-2 rounded hover:bg-red-700">
                 🗑️ Eliminar {hojaActiva.nombre}
             </button>
         </div>

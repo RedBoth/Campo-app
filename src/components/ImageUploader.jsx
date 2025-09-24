@@ -1,8 +1,5 @@
-import { useRef } from "react";
 
 export default function ImageUploader({ image, onImageChange }) {
-  const fileInputRef = useRef(null);
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -15,46 +12,44 @@ export default function ImageUploader({ image, onImageChange }) {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      onImageChange(reader.result); // Base64
+      onImageChange(reader.result);
     };
     reader.readAsDataURL(file);
   };
-  // Función para eliminar la imagen
-  const handleRemove = () => {
-    onImageChange(null); // eliminamos la imagen
-  };
 
   return (
-    <div className="mt-6">
-      <button
-        onClick={() => fileInputRef.current.click()}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-      >
-        Importar Imagen
-      </button>
-      <input
-        type="file"
-        accept="image/*"
-        ref={fileInputRef}
-        className="hidden"
-        onChange={handleFileChange}
-      />
-
-      {image && (
-        <div className="mt-4">
+    <div className="mt-6 bg-secondary/60 shadow rounded-lg p-4">
+      <p className="font-semibold text-neutral-light mb-4 text-lg">Imagen del campo</p>
+      {image ? (
+        <div className="flex flex-col items-center">
           <img
             src={image}
-            alt="Vista del campo"
-            className="max-w-full h-auto rounded-lg shadow"
+            alt="Campo"
+            className="
+              w-full 
+              h-48 sm:h-56 md:h-64 lg:h-auto 
+              max-w-md sm:max-w-lg md:max-w-xl lg:max-w-3xl 
+              object-cover rounded-lg shadow mb-4
+            "
           />
-          <button
-            type="button"
-            onClick={handleRemove}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-          >
-            Quitar imagen
-          </button>
+          <div className="flex gap-3">
+            <label className="px-4 py-2 bg-primary text-white rounded-lg cursor-pointer hover:bg-primary/80">
+              Cambiar imagen
+              <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+            </label>
+            <button
+              onClick={() => onImageChange(null)}
+              className="px-4 py-2 bg-danger text-white rounded-lg hover:bg-danger/80"
+            >
+              Quitar imagen
+            </button>
+          </div>
         </div>
+      ) : (
+        <label className="px-4 py-2 bg-primary text-white rounded-lg cursor-pointer hover:bg-primary/80">
+          Subir imagen
+          <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+        </label>
       )}
     </div>
   );

@@ -14,7 +14,7 @@ return (
                 hoja.id === hojaActiva.id ? { ...hoja, lotes: [...hoja.lotes, nuevoLote] } : hoja
               );
               setHojas(nuevasHojas);
-            }} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            }} className="bg-primary text-neutral-light px-4 py-2 rounded hover:bg-primary/80">
               ➕ Agregar Lote
             </button>
 
