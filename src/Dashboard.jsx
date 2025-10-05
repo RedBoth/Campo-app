@@ -96,10 +96,10 @@ export default function Dashboard({ onLogout, currentUser }) {
     <div className="min-h-screen flex flex-col bg-neutral-brown">
       {/* Topbar */}
       <header className="flex justify-between items-center bg-neutral-dark/40 shadow px-6 py-4">
-        <h1 className="text-xl font-bold text-neutral-light">
+        <h1 className="text-xl font-bold text-neutral-light bg-black/30 px-4 py-2 rounded">
           Gestión de Lotes{" "}
           {currentUser && (
-            <span className="text-gray-600 text-lg">({currentUser})</span>
+            <span className="text-gray-400 text-lg">({currentUser})</span>
           )}
         </h1>
         <button
