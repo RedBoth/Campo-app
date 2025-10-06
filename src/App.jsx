@@ -17,7 +17,7 @@ export default function App() {
     setIsLoggedIn(true);
     setCurrentUser(user);
     localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("currentUser", user);
+    localStorage.setItem("currentUser");
   };
 
   const handleLogout = () => {
