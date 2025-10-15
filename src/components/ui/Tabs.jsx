@@ -1,16 +1,31 @@
-export default function Tabs({ campos, campoActivoId, setcampoActivoId, onNuevoCampo }) {
+export default function Tabs({ campos, campoActivoId, setCampoActivoId, onNuevoCampo, setLoteSeleccionado }) {
+    
+    const handleTabClick = (id) => {
+        setCampoActivoId(id);
+        setLoteSeleccionado(null);
+    };
+
     return (
-        <div className="flex gap-2 mb-6">
-            {campos.map((campo) => (
-                <button key={campo.id} onClick={() => {
-                setcampoActivoId(campo.id);
-                }} className={`px-4 py-2 rounded-t ${campo.id === campoActivoId ? "bg-white border border-b-0 font-semibold" : "bg-gray-300 hover:bg-gray-400"}`}>
-                {campo.nombre}
-                </button>
-            ))}
+        <div className="flex items-center gap-2">
+            {campos.map((campo) => {
+                const isSelected = campo.id === campoActivoId;
+                return (
+                    <button
+                        key={campo.id}
+                        onClick={() => handleTabClick(campo.id)} 
+                        className={`px-4 py-2 rounded transition font-semibold ${
+                            isSelected
+                                ? "bg-primary text-white"
+                                : "bg-secondary/60 text-neutral-light hover:bg-secondary"
+                        }`}
+                    >
+                        {campo.nombre}
+                    </button>
+                );
+            })}
             <button onClick={onNuevoCampo} className="px-4 py-2 rounded-t bg-blue-500 text-white hover:bg-blue-600">
                 +
             </button>
         </div>
-    )
+    );
 }

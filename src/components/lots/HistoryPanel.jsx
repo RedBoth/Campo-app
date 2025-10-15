@@ -1,17 +1,10 @@
-import useAutoScroll from "../hooks/useAutoScroll";
+import useAutoScroll from "../../hooks/useAutoScroll";
 import HistoryInput from "./HistoryInput";
 
-export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, campoActivo }) {
+export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, campos, campoActivoId }) {
     const historialRef = useAutoScroll(loteSeleccionado?.info);
 
-    const handleAgregarRegistro = (textoRecibido) => {
-        const nuevoRegistro = {
-            texto: textoRecibido,
-            fecha: new Date().toLocaleString('es-AR'),
-        };
-
-        onAgregarRegistro(nuevoRegistro);
-    };
+    const campoActivo = campos.find(c => c.id === campoActivoId);
 
     if (!loteSeleccionado) {
         return (
@@ -23,9 +16,8 @@ export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, camp
     
     return (
         <div className="p-4 bg-secondary/60 rounded shadow flex flex-col gap-4">
-            <h2 className="text-lg font-bold text-neutral-light">{campoActivo.nombre} - Historial - {loteSeleccionado.nombre}</h2>
+            <h2 className="text-lg font-bold text-neutral-light">{campoActivo?.nombre} - Historial - {loteSeleccionado.nombre}</h2>
 
-            {/* Lista de registros */}
             <div className="flex flex-col gap-2 max-h-[200px] overflow-y-auto border border-neutral-dark p-2 rounded bg-secondary" ref={historialRef}>
                 {Array.isArray(loteSeleccionado.info) && loteSeleccionado.info.length > 0 ? (
                     [...loteSeleccionado.info].map((reg, i) => (
@@ -39,8 +31,7 @@ export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, camp
                 )}
             </div>
 
-            {/* Campo para agregar nuevo registro */}
-            <HistoryInput onGuardar={handleAgregarRegistro} />
+            <HistoryInput onGuardar={onAgregarRegistro} />
         </div>
     );
 }

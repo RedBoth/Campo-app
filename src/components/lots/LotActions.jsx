@@ -1,23 +1,34 @@
 import { confirmAction } from "../../services/ConfirmationService";
 import { agregarLote, eliminarLote } from "../../api/camposApi";
 
-export default function LotActions({ campos, setCampos, campoActivo, loteSeleccionado, setLoteSeleccionado }) {
+export default function LotActions({ setCampos, campoActivoId, loteSeleccionado, setLoteSeleccionado }) {
     
-    const handleAgregarLote = () => {
+    const handleAgregarLote = async () => {
         const nombre = prompt("Nombre del nuevo lote:");
         if (!nombre) return;
 
-        const nuevosCampos = agregarLote(campos, campoActivo.id, nombre);
-        setCampos(nuevosCampos);
+        await agregarLote(campoActivoId, nombre);
+
+        const nuevoLote = { id: Date.now(), nombre: nombre.trim(), info: [] };
+        setCampos(camposAnteriores => 
+            camposAnteriores.map(c => 
+                c.id === campoActivoId ? { ...c, lotes: [...c.lotes, nuevoLote] } : c
+            )
+        );
     };
 
-    const handleEliminarLote = () => {
+    const handleEliminarLote = async () => {
         if (!loteSeleccionado) return;
         
         const mensaje = `¿Seguro que querés eliminar el lote "${loteSeleccionado.nombre}"? Esta acción no se puede deshacer.`;
         if (confirmAction(mensaje)) {
-            const nuevosCampos = eliminarLote(campos, campoActivo.id, loteSeleccionado.id);
-            setCampos(nuevosCampos);
+            await eliminarLote(campoActivoId, loteSeleccionado);
+            
+            setCampos(camposAnteriores => 
+                camposAnteriores.map(c => 
+                    c.id === campoActivoId ? { ...c, lotes: c.lotes.filter(l => l.id !== loteSeleccionado.id) } : c
+                )
+            );
             setLoteSeleccionado(null);
         }
     };
@@ -27,7 +38,7 @@ export default function LotActions({ campos, setCampos, campoActivo, loteSelecci
             <button onClick={handleAgregarLote} className="bg-primary text-neutral-light px-4 py-2 rounded hover:bg-primary/80">
                 ➕ Agregar Lote
             </button>
-            <button onClick={handleEliminarLote} disabled={!loteSeleccionado} className={`px-4 py-2 rounded ${loteSeleccionado ? "bg-red-500 text-white hover:bg-red-600" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}>
+            <button onClick={handleEliminarLote} disabled={!loteSeleccionado} className={`px-4 py-2 rounded ${loteSeleccionado ? "bg-red-500 text-white hover:bg-red-600" : "bg-gray-300 text-neutral-light"}`}>
                 🗑️ Borrar Lote
             </button>
         </div>

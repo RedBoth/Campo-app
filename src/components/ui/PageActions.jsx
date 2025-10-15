@@ -3,7 +3,7 @@ import { eliminarCampo } from "../../api/camposApi";
 
 export default function PageActions({ campos, setCampos, campoActivo, setCampoActivoId, setLoteSeleccionado }) {
     
-    const handleEliminarCampo = () => {
+    const handleEliminarCampo = async () => {
         if (campos.length <= 1) {
             alert("Debe haber al menos un campo.");
             return;
@@ -11,10 +11,12 @@ export default function PageActions({ campos, setCampos, campoActivo, setCampoAc
 
         const mensaje = `¿Seguro que querés eliminar el campo "${campoActivo.nombre}"? Se borrarán todos sus lotes y registros.`;
         if (confirmAction(mensaje)) {
-            const nuevosCampos = eliminarCampo(campos, campoActivo.id);
-            setCampos(nuevosCampos);
-            // localStorage.setItem("campos", JSON.stringify(nuevosCampos)); // Considerar mover esto a un servicio de storage
-            setCampoActivoId(nuevosCampos[0].id);
+            await eliminarCampo(campoActivo.id);
+            setCampos(camposAnteriores => {
+                const nuevosCampos = camposAnteriores.filter(c => c.id !== campoActivo.id);
+                setCampoActivoId(nuevosCampos[0]?.id || null);
+                return nuevosCampos;
+            });
             setLoteSeleccionado(null);
         }
     };
