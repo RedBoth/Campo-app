@@ -1,14 +1,14 @@
-export default function Tabs({ hojas, hojaActivaId, setHojaActivaId, onNuevaHoja }) {
+export default function Tabs({ campos, campoActivoId, setcampoActivoId, onNuevoCampo }) {
     return (
         <div className="flex gap-2 mb-6">
-            {hojas.map((hoja) => (
-                <button key={hoja.id} onClick={() => {
-                setHojaActivaId(hoja.id);
-                }} className={`px-4 py-2 rounded-t ${hoja.id === hojaActivaId ? "bg-white border border-b-0 font-semibold" : "bg-gray-300 hover:bg-gray-400"}`}>
-                {hoja.nombre}
+            {campos.map((campo) => (
+                <button key={campo.id} onClick={() => {
+                setcampoActivoId(campo.id);
+                }} className={`px-4 py-2 rounded-t ${campo.id === campoActivoId ? "bg-white border border-b-0 font-semibold" : "bg-gray-300 hover:bg-gray-400"}`}>
+                {campo.nombre}
                 </button>
             ))}
-            <button onClick={onNuevaHoja} className="px-4 py-2 rounded-t bg-blue-500 text-white hover:bg-blue-600">
+            <button onClick={onNuevoCampo} className="px-4 py-2 rounded-t bg-blue-500 text-white hover:bg-blue-600">
                 +
             </button>
         </div>

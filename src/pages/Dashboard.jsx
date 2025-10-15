@@ -6,45 +6,45 @@ export default function Dashboard({ onLogout, currentUser }) {
   // Estado de navegación
   const [activePage, setActivePage] = useState("campos");
 
-  // Estado y lógica de hojas/lotes (pueden quedar aquí o moverse a CamposPage si solo ahí se usan)
-  const defaultHojas = [
+  // Estado y lógica de campos/lotes (pueden quedar aquí o moverse a CamposPage si solo ahí se usan)
+  const defaultCampos = [
     { id: 1, nombre: "Campo 1", lotes: [{ id: 1, nombre: "Lote 1" }] },
   ];
-  const [hojas, setHojas] = useState(() => {
-    const dataGuardada = localStorage.getItem("hojas");
-    return dataGuardada ? JSON.parse(dataGuardada) : defaultHojas;
+  const [campos, setCampos] = useState(() => {
+    const dataGuardada = localStorage.getItem("campos");
+    return dataGuardada ? JSON.parse(dataGuardada) : defaultCampos;
   });
   useEffect(() => {
-    localStorage.setItem("hojas", JSON.stringify(hojas));
-  }, [hojas]);
+    localStorage.setItem("campos", JSON.stringify(campos));
+  }, [campos]);
 
-  const [hojaActivaId, setHojaActivaId] = useState(1);
+  const [campoActivoId, setCampoActivoId] = useState(1);
   const [loteSeleccionado, setLoteSeleccionado] = useState(null);
-  const hojaActiva = hojas.find((h) => h.id === hojaActivaId);
+  const campoActivo = campos.find((campo) => campo.id === campoActivoId);
 
   // Handlers (los podés pasar a CamposPage como props)
   const handleLoteClick = (lote) => {
     setLoteSeleccionado(loteSeleccionado?.id === lote.id ? null : lote);
   };
-  const handleNuevaHoja = () => {
-    const nuevaId = hojas.length + 1;
-    setHojas([...hojas, { id: nuevaId, nombre: `Campo ${nuevaId}`, lotes: [] }]);
-    setHojaActivaId(nuevaId);
+  const handleNuevoCampo = () => {
+    const nuevaId = campos.length + 1;
+    setCampos([...campos, { id: nuevaId, nombre: `Campo ${nuevaId}`, lotes: [] }]);
+    setCampoActivoId(nuevaId);
     setLoteSeleccionado(null);
   };
   const handleAgregarRegistro = (nuevoRegistro) => {
     if (!loteSeleccionado) return;
-    setHojas((prev) => 
-      prev.map((hoja) => 
-        hoja.id === hojaActiva.id 
+    setCampos((prev) => 
+      prev.map((campo) => 
+        campo.id === campoActivo.id 
           ? { 
-            ...hoja,
-            lotes: hoja.lotes.map((l) => 
+            ...campo,
+            lotes: campo.lotes.map((l) => 
               l.id === loteSeleccionado.id
                 ? { ...l, info: [...(l.info || []), nuevoRegistro] } 
                 : l
             ),
-        } : hoja 
+        } : campo 
       ) 
     ); 
           
@@ -54,8 +54,8 @@ export default function Dashboard({ onLogout, currentUser }) {
           }));
   };
   const handleImageChange = (base64) => { 
-    setHojas((prev) => prev.map((hoja) => 
-      hoja.id === hojaActiva.id ? { ...hoja, imagen: base64 } : hoja 
+    setCampos((prev) => prev.map((campo) => 
+      campo.id === campoActivo.id ? { ...campo, imagen: base64 } : campo 
       ) 
     ); 
   };
@@ -82,14 +82,14 @@ export default function Dashboard({ onLogout, currentUser }) {
 
           {activePage === "campos" && (
             <CamposPage
-              hojas={hojas}
-              setHojas={setHojas}
-              hojaActiva={hojaActiva}
-              hojaActivaId={hojaActivaId}
-              setHojaActivaId={setHojaActivaId}
+              campos={campos}
+              setCampos={setCampos}
+              campoActivo={campoActivo}
+              campoActivoId={campoActivoId}
+              setCampoActivoId={setCampoActivoId}
               loteSeleccionado={loteSeleccionado}
               setLoteSeleccionado={setLoteSeleccionado}
-              handleNuevaHoja={handleNuevaHoja}
+              handleNuevoCampo={handleNuevoCampo}
               handleLoteClick={handleLoteClick}
               handleAgregarRegistro={handleAgregarRegistro}
               handleImageChange={handleImageChange}

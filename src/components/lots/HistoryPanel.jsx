@@ -1,29 +1,16 @@
-import { useState, useEffect, useRef } from "react";
+import useAutoScroll from "../hooks/useAutoScroll";
+import HistoryInput from "./HistoryInput";
 
-export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, hojaActiva }) {
-    const [texto, setTexto] = useState("");
-    const historialRef = useRef(null);
+export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, campoActivo }) {
+    const historialRef = useAutoScroll(loteSeleccionado?.info);
 
-    useEffect(() => {
-        setTexto("");
-    }, [loteSeleccionado]);
-
-    useEffect(() => {
-        if (historialRef.current) {
-            historialRef.current.scrollTop = historialRef.current.scrollHeight;
-        }
-    }, [loteSeleccionado?.info]);
-
-    const handleGuardar = () => {
-        if (!texto.trim()) return;
-
+    const handleAgregarRegistro = (textoRecibido) => {
         const nuevoRegistro = {
-            texto: texto.trim(),
-            fecha: new Date().toLocaleString(),
+            texto: textoRecibido,
+            fecha: new Date().toLocaleString('es-AR'),
         };
 
         onAgregarRegistro(nuevoRegistro);
-        setTexto("");
     };
 
     if (!loteSeleccionado) {
@@ -36,7 +23,7 @@ export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, hoja
     
     return (
         <div className="p-4 bg-secondary/60 rounded shadow flex flex-col gap-4">
-            <h2 className="text-lg font-bold text-neutral-light">{hojaActiva.nombre} - Historial - {loteSeleccionado.nombre}</h2>
+            <h2 className="text-lg font-bold text-neutral-light">{campoActivo.nombre} - Historial - {loteSeleccionado.nombre}</h2>
 
             {/* Lista de registros */}
             <div className="flex flex-col gap-2 max-h-[200px] overflow-y-auto border border-neutral-dark p-2 rounded bg-secondary" ref={historialRef}>
@@ -53,18 +40,7 @@ export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, hoja
             </div>
 
             {/* Campo para agregar nuevo registro */}
-            <textarea 
-                value={texto}
-                onChange={(e) => setTexto(e.target.value)}
-                placeholder="Escribe la información del lote aquí..."
-                className="border p-2 w-full rounded min-h-[60px] resize-none text-neutral-light bg-secondary border-neutral-dark placeholder:text-neutral-light focus:outline-none focus:border-black" />
-            
-            <button
-                onClick={handleGuardar}
-                className="bg-primary text-neutral-light px-4 py-2 rounded hover:bg-primary/60 font-semibold"
-            >
-                Guardar
-            </button>
+            <HistoryInput onGuardar={handleAgregarRegistro} />
         </div>
     );
 }

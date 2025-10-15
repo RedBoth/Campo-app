@@ -6,14 +6,14 @@ import ImageUploader from "../components/ImageUploader";
 import PageActions from "../components/ui/PageActions";
 
 export default function CamposPage({
-  hojas,
-  setHojas,
-  hojaActiva,
-  hojaActivaId,
-  setHojaActivaId,
+  campos,
+  setCampos,
+  campoActivo,
+  campoActivoId,
+  setCampoActivoId,
   loteSeleccionado,
   setLoteSeleccionado,
-  handleNuevaHoja,
+  handleNuevoCampo,
   handleLoteClick,
   handleAgregarRegistro,
   handleImageChange,
@@ -21,24 +21,23 @@ export default function CamposPage({
   return (
     <>
       <Tabs
-        hojas={hojas}
-        hojaActivaId={hojaActivaId}
-        setHojaActivaId={setHojaActivaId}
-        onNuevaHoja={handleNuevaHoja}
+        campos={campos}
+        campoActivoId={campoActivoId}
+        setCampoActivoId={setCampoActivoId}
+        onNuevoCampo={handleNuevoCampo}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div>
           <LotGrid
-            lotes={hojaActiva?.lotes || []}
+            lotes={campoActivo?.lotes || []}
             onLoteClick={handleLoteClick}
             loteSeleccionado={loteSeleccionado}
           />
-
           <LotActions
-            hojas={hojas}
-            setHojas={setHojas}
-            hojaActiva={hojaActiva}
+            campos={campos}
+            setCampos={setCampos}
+            campoActivo={campoActivo}
             loteSeleccionado={loteSeleccionado}
             setLoteSeleccionado={setLoteSeleccionado}
           />
@@ -47,23 +46,23 @@ export default function CamposPage({
         <HistoryPanel
           loteSeleccionado={loteSeleccionado}
           onAgregarRegistro={handleAgregarRegistro}
-          hojaActiva={hojaActiva}
+          campoActivo={campoActivo}
         />
       </div>
 
       <div className="mt-6">
         <ImageUploader
-          image={hojaActiva?.imagen}
+          image={campoActivo?.imagen}
           onImageChange={handleImageChange}
         />
       </div>
 
       <div className="mt-6">
         <PageActions
-          hojas={hojas}
-          setHojas={setHojas}
-          hojaActiva={hojaActiva}
-          setHojaActivaId={setHojaActivaId}
+          campos={campos}
+          setCampos={setCampos}
+          campoActivo={campoActivo}
+          setCampoActivoId={setCampoActivoId}
           setLoteSeleccionado={setLoteSeleccionado}
         />
       </div>

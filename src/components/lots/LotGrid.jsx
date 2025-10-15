@@ -5,9 +5,9 @@ export default function LotGrid({ lotes, onLoteClick, loteSeleccionado }) {
                 const isSelected = loteSeleccionado?.id === lote.id;
                 return (
                     <button key={lote.id} onClick={() => onLoteClick(lote)} className={`p-4 text-center rounded shadow  transition ${isSelected ? "bg-primary/60 text-neutral-light" : "bg-primary hover:bg-primary/60 text-neutral-light"}`}>
-                        <button onClick={() => onLoteClick(lote)} className="w-full text-center font-semibold">
+                        <span className="font-semibold">
                             {lote.nombre}
-                        </button>
+                        </span>
                     </button>
                 );
             })}
