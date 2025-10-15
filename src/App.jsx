@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Login from "./components/Login";
-import Dashboard from "./Dashboard";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

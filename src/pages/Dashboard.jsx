@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "../components/ui/Sidebar";
 import CamposPage from "./CamposPage";
 
 export default function Dashboard({ onLogout, currentUser }) {

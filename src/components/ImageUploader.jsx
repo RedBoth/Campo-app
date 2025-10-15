@@ -1,4 +1,3 @@
-
 export default function ImageUploader({ image, onImageChange }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];

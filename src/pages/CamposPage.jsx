@@ -1,9 +1,9 @@
-import Tabs from "./components/Tabs";
-import LotGrid from "./components/LotGrid";
-import LotActions from "./components/LotActions";
-import HistoryPanel from "./components/HistoryPanel";
-import ImageUploader from "./components/ImageUploader";
-import PageActions from "./components/PageActions";
+import Tabs from "../components/ui/Tabs";
+import LotGrid from "../components/lots/LotGrid";
+import LotActions from "../components/lots/LotActions";
+import HistoryPanel from "../components/lots/HistoryPanel";
+import ImageUploader from "../components/ImageUploader";
+import PageActions from "../components/ui/PageActions";
 
 export default function CamposPage({
   hojas,
