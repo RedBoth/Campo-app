@@ -1,4 +1,4 @@
-import { confirmAction } from "../../services/ConfirmationService";
+import { confirmAction } from "../../services/confirmationService";
 import { eliminarCampo } from "../../api/camposApi";
 
 export default function PageActions({ campos, setCampos, campoActivo, setCampoActivoId, setLoteSeleccionado }) {
