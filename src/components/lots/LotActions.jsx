@@ -1,4 +1,4 @@
-import { confirmAction } from "../../services/ConfirmationService";
+import { confirmAction } from "../../services/confirmationService";
 import { agregarLote, eliminarLote } from "../../api/camposApi";
 
 export default function LotActions({ setCampos, campoActivoId, loteSeleccionado, setLoteSeleccionado }) {
