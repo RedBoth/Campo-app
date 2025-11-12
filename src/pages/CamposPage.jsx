@@ -3,8 +3,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { agregarCampo, agregarRegistro, actualizarImagenCampo } from "../api/camposApi";
 import Tabs from "../components/ui/Tabs";
-import LotGrid from "../components/lots/LotGrid";
-import LotActions from "../components/lots/LotActions";
+import LotManager from "../components/lots/LotManager";
 import HistoryPanel from "../components/lots/HistoryPanel";
 import ImageUploader from "../components/ImageUploader";
 import PageActions from "../components/ui/PageActions";
@@ -80,7 +79,7 @@ export default function CamposPage() {
     };
 
     if (loading) {
-        return <p className="text-neutral-light text-center mt-10">Cargando campos...</p>;
+        return <p className="text-neutral-gray700 text-center mt-10 text-lg">Cargando campos...</p>;
     }
 
     const campoActivo = campos.find(c => c.id === campoActivoId);
@@ -95,25 +94,19 @@ export default function CamposPage() {
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div>
-                    <LotGrid
-                        lotes={campoActivo?.lotes || []}
-                        onLoteClick={handleLoteClick}
-                        loteSeleccionado={loteSeleccionado}
-                    />
-                    <LotActions
-                        setCampos={setCampos}
-                        campoActivoId={campoActivoId}
-                        loteSeleccionado={loteSeleccionado}
-                        setLoteSeleccionado={setLoteSeleccionado}
-                    />
-                </div>
+                <LotManager
+                    lotes={campoActivo?.lotes || []}
+                    campoActivoId={campoActivoId}
+                    loteSeleccionado={loteSeleccionado}
+                    setCampos={setCampos}
+                    setLoteSeleccionado={setLoteSeleccionado}
+                    onLoteClick={handleLoteClick}
+                    campos={campos}
+                />
                 <HistoryPanel
                     key={loteSeleccionado ? loteSeleccionado.id : 'ninguno'}
                     loteSeleccionado={loteSeleccionado}
                     onAgregarRegistro={handleAgregarRegistro}
-                    campos={campos}
-                    campoActivoId={campoActivoId}
                 />
             </div>
 

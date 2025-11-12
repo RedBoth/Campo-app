@@ -36,10 +36,10 @@ export default function LotActions({ setCampos, campoActivoId, loteSeleccionado,
     return (
         <div className="mt-4 flex gap-2">
             <button onClick={handleAgregarLote} className="bg-primary text-neutral-light px-4 py-2 rounded hover:bg-primary/80">
-                ➕ Agregar Lote
+                Agregar Lote
             </button>
             <button onClick={handleEliminarLote} disabled={!loteSeleccionado} className={`px-4 py-2 rounded ${loteSeleccionado ? "bg-red-500 text-white hover:bg-red-600" : "bg-gray-300 text-neutral-light"}`}>
-                🗑️ Borrar Lote
+                Borrar Lote
             </button>
         </div>
     )

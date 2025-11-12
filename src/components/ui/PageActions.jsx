@@ -10,7 +10,7 @@ export default function PageActions({ campos, setCampos, campoActivoId, setCampo
         }
 
         const campoActivo = campos.find(c => c.id === campoActivoId);
-        if (!campoActivo) return; // Añadimos una seguridad por si no se encuentra
+        if (!campoActivo) return;
 
         const mensaje = `¿Seguro que querés eliminar el campo "${campoActivo.nombre}"? Se borrarán todos sus lotes y registros.`;
         
@@ -29,8 +29,8 @@ export default function PageActions({ campos, setCampos, campoActivoId, setCampo
     
     return (
         <div className="flex justify-end mt-6">
-            <button onClick={handleEliminarCampo} className="bg-danger text-white px-4 py-2 rounded hover:bg-red-700">
-                🗑️ Eliminar Campo
+            <button onClick={handleEliminarCampo} className="bg-danger text-white font-medium px-4 py-2 rounded hover:bg-red-700">
+                Eliminar campo
             </button>
         </div>
     )

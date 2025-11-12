@@ -30,20 +30,20 @@ export default function ImageUploader({ image, onImageChange, campoActivoId }) {
     }
 
     return (
-        <div className="mt-6 bg-secondary/60 shadow rounded-lg p-4">
-            <p className="font-semibold text-neutral-light mb-4 text-lg">Imagen del campo</p>
+        <div className="mt-6 bg-neutral-white shadow rounded-lg p-4">
+            <p className="font-semibold text-neutral-gray900 mb-4 text-lg">Imagen del campo</p>
             
-            {isUploading && <p className="text-center text-neutral-light">Subiendo imagen...</p>}
+            {isUploading && <p className="text-center text-neutral-gray700">Subiendo imagen...</p>}
 
             {!isUploading && image && (
                 <div className="flex flex-col items-center">
                     <img src={image} alt="Campo" className="w-full max-w-xl object-cover rounded-lg shadow mb-4" />
                     <div className="flex gap-3">
-                        <label className="px-4 py-2 bg-primary text-white rounded-lg cursor-pointer hover:bg-primary/80">
+                        <label className="px-4 py-2 bg-primary text-neutral-white rounded-lg cursor-pointer hover:bg-primary/90">
                             Cambiar imagen
                             <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
                         </label>
-                        <button onClick={handleRemoveImage} className="px-4 py-2 bg-danger text-white rounded-lg hover:bg-danger/80">
+                        <button onClick={handleRemoveImage} className="px-4 py-2 bg-softdanger text-danger rounded-lg hover:bg-red-300">
                             Quitar imagen
                         </button>
                     </div>
@@ -51,7 +51,7 @@ export default function ImageUploader({ image, onImageChange, campoActivoId }) {
             )}
             
             {!isUploading && !image && (
-                <label className="px-4 py-2 bg-primary text-white rounded-lg cursor-pointer hover:bg-primary/80">
+                <label className="px-4 py-2 bg-primary text-neutral-white rounded-lg cursor-pointer hover:bg-primary/90">
                     Subir imagen
                     <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" disabled={!campoActivoId} />
                 </label>

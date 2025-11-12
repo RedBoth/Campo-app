@@ -7,17 +7,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#365c12",   //Verde oscuro
-        secondary: "#004643", //Verde agua oscuro
+        primary: "#4D7C0F",   //Verde oliva
+        secondary: "#176635", //Verde oscuro
         neutral: {
-          light: "#FAFAFA",   //Blanco-50
-          brown: "#292624",     //Marron oscuro
-          dark: "#302f2c" //Asfalto
+          white: "#FFFFFF",
+          gray50: "#F8FAFC",
+          gray100: "#F1F5F9",
+          gray300: "#CBD5E1",
+          gray500: "#64748B",
+          gray700: "#334155",
+          gray900: "#0F172A",
         },
-        success: "#22c55e", //Verde-500
-        danger: "#ef4444",  //Rojo-500
-        warning: "#f59e0b"  //Amarillo-500
-      }
+        softdanger: "#FEE2E2", //Rojo-100
+        danger: "#B91C1C",   //Rojo-700
+        aqua: {
+          light: "#D1FAE5",
+          DEFAULT: "#10B981",
+        },
+      },
+      fontFamily: {
+        display: ['Inter', 'sans-serif'],
+      },
     },
   },
   plugins: [],
