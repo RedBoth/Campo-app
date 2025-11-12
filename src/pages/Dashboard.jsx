@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../components/ui/Sidebar";
 import CamposPage from "./CamposPage";
+import Home from "./Home";
 
 export default function Dashboard({ onLogout, currentUser }) {
   const [activePage, setActivePage] = useState("campos");
@@ -21,7 +22,7 @@ export default function Dashboard({ onLogout, currentUser }) {
         <Sidebar onNavigate={setActivePage} />
 
         <section className="flex-1 p-6">
-            {activePage === "inicio" && <p className="text-neutral-light">⚙️ Inicio</p>}
+            {activePage === "inicio" && <Home />}
             
             {activePage === "campos" && <CamposPage />}
         </section>
