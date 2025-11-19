@@ -1,0 +1,69 @@
+import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase-config";
+import { useNavigate } from "react-router-dom";
+
+export default function SignUp() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/campos");
+      // Firebase inicia sesión automáticamente luego de registrarse
+    } catch (err) {
+      if (err.code === "auth/email-already-in-use") {
+        setError("El email ya está registrado.");
+      } else if (err.code === "auth/weak-password") {
+        setError("La contraseña debe tener al menos 6 caracteres.");
+      } else {
+        setError("Error al registrarse.");
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-neutral-gray100">
+      <form
+        onSubmit={handleRegister}
+        className="bg-neutral-white p-6 rounded-xl shadow-md w-80"
+      >
+        <h2 className="text-xl font-bold mb-4">Crear cuenta</h2>
+
+        {error && (
+          <p className="text-danger text-sm mb-2">{error}</p>
+        )}
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 mb-3 border rounded"
+        />
+
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 mb-3 border rounded"
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-primary text-neutral-white py-2 rounded hover:bg-blue-700"
+        >
+          Registrarse
+        </button>
+      </form>
+    </div>
+  );
+}

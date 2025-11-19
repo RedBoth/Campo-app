@@ -1,36 +1,29 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
-export default function Login({ onLogin }) {
-  const [username, setUsername] = useState("");
+export default function Login() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // credenciales "hardcodeadas"
-  const USERS = [
-    { user: "admin", pass: "1234" },
-    { user: "leometal_80", pass: "abcd" }
-  ]
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    const found = USERS.find(
-      (u) => u.user === username && u.pass === password
-    );
-
-    if (found) {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("currentUser", found.user); // guardamos quién entró
-      onLogin();
-    } else {
-      setError("Usuario o contraseña incorrectos");
+    try {
+      await login(email, password);
+      navigate("/campos");
+    } catch (err) {
+      setError("Email o contraseña incorrectos");
     }
   };
-
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleLogin}
         className="bg-white p-6 rounded-xl shadow-md w-80"
       >
         <h2 className="text-xl font-bold mb-4">Iniciar Sesión</h2>
@@ -40,10 +33,10 @@ export default function Login({ onLogin }) {
         )}
 
         <input
-          type="text"
-          placeholder="Usuario"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 mb-3 border rounded"
         />
 
@@ -61,6 +54,12 @@ export default function Login({ onLogin }) {
         >
           Entrar
         </button>
+        <p className="text-sm text-center mt-3">
+          ¿No tenés cuenta?{" "}
+          <a href="/signup" className="text-blue-600 hover:underline">
+            Crear cuenta
+          </a>
+        </p>
       </form>
     </div>
   );

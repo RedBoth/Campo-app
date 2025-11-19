@@ -81,7 +81,7 @@ export default function LotManager({
           onClick={handleAgregarLote}
           className="flex items-center justify-center gap-1 px-4 py-2 rounded-md bg-primary text-white font-medium hover:bg-primary/90 transition"
         >
-          <span class="material-icons-outlined text-base">add</span> Agregar lote
+          <span className="material-icons-outlined text-base">add</span> Agregar lote
         </button>
 
         <button
@@ -93,7 +93,7 @@ export default function LotManager({
               : "bg-gray-200 text-gray-400 cursor-not-allowed"
           }`}
         >
-          <span class="material-icons-outlined text-base">delete</span> Borrar
+          <span className="material-icons-outlined text-base">delete</span> Borrar
         </button>
       </div>
     </div>

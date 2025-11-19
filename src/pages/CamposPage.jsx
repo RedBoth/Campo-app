@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase-config";
+import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
+import { db, auth } from "../firebase-config";
 import { agregarCampo, agregarRegistro, actualizarImagenCampo } from "../api/camposApi";
 import Tabs from "../components/ui/Tabs";
 import LotManager from "../components/lots/LotManager";
@@ -18,7 +18,15 @@ export default function CamposPage() {
         const obtenerCampos = async () => {
             setLoading(true);
             try {
-                const querySnapshot = await getDocs(collection(db, "campos"));
+                const user = auth.currentUser;
+                if (!user) return;
+
+                const camposQuery = query(
+                    collection(db, "campos"),
+                    where("userId", "==", user.uid),
+                    orderBy("createdAt", "asc")
+                );
+                const querySnapshot = await getDocs(camposQuery);
                 const camposData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setCampos(camposData);
                 if (camposData.length > 0 && !campoActivoId) {

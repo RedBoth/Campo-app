@@ -1,10 +1,17 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthProvider";
 import Sidebar from "../components/ui/Sidebar";
 import CamposPage from "./CamposPage";
 import Home from "./Home";
 
-export default function Dashboard({ onLogout, currentUser }) {
+export default function Dashboard() {
   const [activePage, setActivePage] = useState("campos");
+  const { currentUser, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    window.location.href = "/login";
+  };
 
   return (
     <div className="min-h-screen flex bg-neutral-gray ml-64">
@@ -18,13 +25,13 @@ export default function Dashboard({ onLogout, currentUser }) {
           {activePage === "inicio" && "Inicio"}
           {activePage === "campos" && (
             <div>
-              <h2 class="text-3xl font-bold text-neutral-gray900">Gestión de campos y lotes</h2>
-              <p class="text-neutral-gray500">Seleccione un campo para ver y editar sus lotes.</p>
+              <h2 className="text-3xl font-bold text-neutral-gray900">Gestión de campos y lotes</h2>
+              <p className="text-neutral-gray500">Seleccione un campo para ver y editar sus lotes.</p>
             </div>
           )}
 
           <button
-            onClick={onLogout}
+            onClick={handleLogout}
             className="px-4 py-2 font-medium rounded-lg bg-neutral-gray50 text-neutral-gray700 border border-neutral-gray300 hover:bg-softdanger transition"
           >
             Cerrar sesion

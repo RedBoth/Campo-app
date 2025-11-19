@@ -1,5 +1,5 @@
-import { db } from "../firebase-config";
-import { collection, doc, addDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { db, auth } from "../firebase-config";
+import { collection, doc, addDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
 
 
 /**
@@ -8,9 +8,17 @@ import { collection, doc, addDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove 
  * @returns {Promise<DocumentReference>} La referencia al nuevo documento creado.
  */
 export const agregarCampo = async (nombreCampo) => {
+    const user = auth.currentUser;
+
+    if (!user) {
+        throw new Error("No hay un usuario autenticado.");
+    }
+
     const nuevoCampo = {
         nombre: nombreCampo,
         lotes: [],
+        userId: user.uid,
+        createdAt: serverTimestamp(),
     };
     return await addDoc(collection(db, "campos"), nuevoCampo);
 };

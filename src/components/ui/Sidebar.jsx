@@ -16,6 +16,7 @@ export default function Sidebar({ onNavigate, currentUser }) {
 
   return (
     <aside className="fixed top-0 left-0 w-64 bg-neutral-dark text-neutral-light flex flex-col h-screen border-r-2 border-neutral-gray300">
+      
       {/* Logo y título */}
       <div className="p-6">
         <h1 className="text-4xl font-bold text-neutral-gray900">
@@ -51,11 +52,18 @@ export default function Sidebar({ onNavigate, currentUser }) {
           })}
         </ul>
       </nav>
-      
-      <div class="p-4 border-t border-neutral-gray300">
-        <div class="flex items-center">
-          <img alt="Admin user avatar" class="h-10 w-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHDJ7_nHNk8YOYX3P0tPQ3lS5fp4oAE2miU0y4goO36HZew3uAg-U3qthUAoyT5aSrw82bnhEw1FtchGCkGNsCOj6BfKE1st0Tr4veMlVisPlimDzatYMTYCaUu5H3iGK-DHEn-XDyysbYGuI0iePJyD2tRxtqd-1CgFCa0IUD2XXViou4YsC2MBgJNUlMDsNCWBgTJwlX3Xxr0mwt_STtn-5NrmyVjOrgnj8Ppy8AAQIayqOkeCBBTFtXS8jsHf4oZ_1X17rJi0A"/>
-          <p class="text-sm font-semibold text-neutral-gray900 ml-3">{currentUser}</p>
+
+      {/* Usuario */}
+      <div className="p-4 border-t border-neutral-gray300">
+        <div className="flex items-center">
+          <img
+            alt="Admin user avatar"
+            className="h-10 w-10 rounded-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHDJ7_nHNk8YOYX3P0tPQ3lS5fp4oAE2miU0y4goO36HZew3uAg-U3qthUAoyT5aSrw82bnhEw1FtchGCkGNsCOj6BfKE1st0Tr4veMlVisPlimDzatYMTYCaUu5H3iGK-DHEn-XDyysbYGuI0iePJyD2tRxtqd-1CgFCa0IUD2XXViou4YsC2MBgJNUlMDsNCWBgTJwlX3Xxr0mwt_STtn-5NrmyVjOrgnj8Ppy8AAQIayqOkeCBBTFtXS8jsHf4oZ_1X17rJi0A"
+          />
+          <p className="text-sm font-semibold text-neutral-gray900 ml-3">
+            {currentUser?.email ?? "Sin usuario"}
+          </p>
         </div>
       </div>
 
