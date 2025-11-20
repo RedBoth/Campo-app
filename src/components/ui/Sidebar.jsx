@@ -62,7 +62,7 @@ export default function Sidebar({ onNavigate, currentUser }) {
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHDJ7_nHNk8YOYX3P0tPQ3lS5fp4oAE2miU0y4goO36HZew3uAg-U3qthUAoyT5aSrw82bnhEw1FtchGCkGNsCOj6BfKE1st0Tr4veMlVisPlimDzatYMTYCaUu5H3iGK-DHEn-XDyysbYGuI0iePJyD2tRxtqd-1CgFCa0IUD2XXViou4YsC2MBgJNUlMDsNCWBgTJwlX3Xxr0mwt_STtn-5NrmyVjOrgnj8Ppy8AAQIayqOkeCBBTFtXS8jsHf4oZ_1X17rJi0A"
           />
           <p className="text-sm font-semibold text-neutral-gray900 ml-3">
-            {currentUser?.email ?? "Sin usuario"}
+            {currentUser?.nombre} {currentUser?.apellido}
           </p>
         </div>
       </div>

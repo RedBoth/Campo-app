@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 export default function SignUp() {
+  const { signup } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
@@ -15,9 +18,9 @@ export default function SignUp() {
     setError("");
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await signup(email, password, nombre, apellido);
       navigate("/campos");
-      // Firebase inicia sesión automáticamente luego de registrarse
+
     } catch (err) {
       if (err.code === "auth/email-already-in-use") {
         setError("El email ya está registrado.");
@@ -37,9 +40,23 @@ export default function SignUp() {
       >
         <h2 className="text-xl font-bold mb-4">Crear cuenta</h2>
 
-        {error && (
-          <p className="text-danger text-sm mb-2">{error}</p>
-        )}
+        {error && <p className="text-danger text-sm mb-2">{error}</p>}
+
+        <input
+          type="text"
+          placeholder="Nombre"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          className="w-full p-2 mb-3 border rounded"
+        />
+
+        <input
+          type="text"
+          placeholder="Apellido"
+          value={apellido}
+          onChange={(e) => setApellido(e.target.value)}
+          className="w-full p-2 mb-3 border rounded"
+        />
 
         <input
           type="email"

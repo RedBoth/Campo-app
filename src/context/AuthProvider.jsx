@@ -6,7 +6,8 @@ import {
   signOut,
   createUserWithEmailAndPassword
 } from "firebase/auth";
-import { auth } from "../firebase-config";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase-config";
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -17,15 +18,51 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const userSnap = await getDoc(userRef);
+
+          const userData = userSnap.exists() ? userSnap.data() : {};
+
+          setCurrentUser({
+            uid: user.uid,
+            email: user.email,
+            ...userData,
+          });
+
+        } catch (error) {
+          console.error("Error cargando datos del usuario:", error);
+          setCurrentUser(user);
+        }
+      } else {
+        setCurrentUser(null);
+      }
+
       setLoading(false);
     });
+
     return () => unsub();
   }, []);
 
-  const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
-  const signup = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+  const login = (email, password) =>
+    signInWithEmailAndPassword(auth, email, password);
+
+  const signup = async (email, password, nombre, apellido) => {
+    const userCred = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCred.user;
+
+    await setDoc(doc(db, "users", user.uid), {
+      nombre,
+      apellido,
+      email,
+      createdAt: new Date(),
+    });
+
+    return user;
+  };
+
   const logout = () => signOut(auth);
 
   const value = { currentUser, login, signup, logout };
