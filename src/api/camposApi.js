@@ -1,5 +1,5 @@
 import { db, auth } from "../firebase-config";
-import { collection, doc, addDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
+import { collection, doc, getDoc, addDoc, updateDoc, deleteDoc, runTransaction, arrayRemove, serverTimestamp } from "firebase/firestore";
 
 
 /**
@@ -31,16 +31,27 @@ export const agregarCampo = async (nombreCampo) => {
  * @returns {Array} Un nuevo array de campos con el lote agregado.
  */
 export const agregarLote = async (campoId, nombreLote) => {
+    const camposRef = doc(db, "campos", campoId);
+    const campoSnap = await getDoc(camposRef);
+
+    if (!campoSnap.exists()) throw new Error("Campo no encontrado");
+
+    const datos = campoSnap.data();
+    const nuevosLotes = datos.lotes || [];
+
+    const loteId = Date.now().toString(); 
+
     const nuevoLote = {
-        id: Date.now(),
+        id: loteId,
         nombre: nombreLote.trim(),
-        info: [],
+        info: []
     };
 
-    const camposRef = doc(db, "campos", campoId);
     await updateDoc(camposRef, {
-        lotes: arrayUnion(nuevoLote)
+        lotes: [...nuevosLotes, nuevoLote]
     });
+
+    return loteId;
 };
 
 /**
@@ -75,18 +86,29 @@ export const eliminarCampo = async (campoId) => {
  * @param {object} lote El objeto completo del lote a actualizar.
  * @param {object} nuevoRegistro El nuevo objeto de registro a agregar.
  */
-export const agregarRegistro = async (campoId, lote, nuevoRegistro) => {
-    // Para actualizar un elemento dentro de un array, necesitamos quitar el viejo y poner el nuevo.
-    const loteSinRegistro = { ...lote };
-    delete loteSinRegistro.info; // Firestore no nos deja usar arrayRemove y arrayUnion al mismo tiempo.
-    
-    const loteActualizado = { ...lote, info: [...(lote.info || []), nuevoRegistro] };
-
+export const agregarRegistro = async (campoId, loteId, nuevoRegistro) => {
     const campoRef = doc(db, "campos", campoId);
-    // Quitamos el lote viejo
-    await updateDoc(campoRef, { lotes: arrayRemove(lote) });
-    // Agregamos el lote con la nueva info
-    await updateDoc(campoRef, { lotes: arrayUnion(loteActualizado) });
+
+    await runTransaction(db, async (transaction) => {
+        const campoDoc = await transaction.get(campoRef);
+        if (!campoDoc.exists()) throw new Error("Campo no encontrado");
+
+        const datos = campoDoc.data();
+        const lotes = datos.lotes || [];
+
+        const index = lotes.findIndex(l => l.id.toString() === loteId.toString());
+        
+        if (index === -1) throw new Error("Lote no encontrado para agregar registro");
+
+        const nuevosLotes = [...lotes];
+        
+        nuevosLotes[index] = {
+            ...nuevosLotes[index],
+            info: [...(nuevosLotes[index].info || []), nuevoRegistro]
+        };
+
+        transaction.update(campoRef, { lotes: nuevosLotes });
+    });
 };
 
 /**

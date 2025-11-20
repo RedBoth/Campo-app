@@ -8,24 +8,36 @@ export default function LotManager({
   setCampos,
   setLoteSeleccionado,
   onLoteClick,
-  campos,
+  campos
 }) {
   const handleAgregarLote = async () => {
     const nombre = prompt("Nombre del nuevo lote:");
     if (!nombre) return;
 
+    try {
+        const loteId = await agregarLote(campoActivoId, nombre);
 
-    await agregarLote(campoActivoId, nombre);
+        const nuevoLote = { 
+            id: loteId,
+            nombre: nombre.trim(), 
+            info: [] 
+        };
 
-    const nuevoLote = { id: Date.now(), nombre: nombre.trim(), info: [] };
-    setCampos((camposPrev) =>
-      camposPrev.map((c) =>
-        c.id === campoActivoId
-          ? { ...c, lotes: [...c.lotes, nuevoLote] }
-          : c
-      )
-    );
-  };
+        setCampos((camposPrev) =>
+            camposPrev.map((c) =>
+                c.id === campoActivoId
+                    ? { ...c, lotes: [...c.lotes, nuevoLote] }
+                    : c
+            )
+        );
+        
+        setLoteSeleccionado(nuevoLote);
+
+    } catch (error) {
+        console.error("Error al crear el lote:", error);
+        alert("No se pudo crear el lote.");
+    }
+};
 
   const handleEliminarLote = async () => {
     if (!loteSeleccionado) return;

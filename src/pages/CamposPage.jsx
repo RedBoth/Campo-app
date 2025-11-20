@@ -27,7 +27,18 @@ export default function CamposPage() {
                     orderBy("createdAt", "asc")
                 );
                 const querySnapshot = await getDocs(camposQuery);
-                const camposData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const camposData = querySnapshot.docs.map(doc => {
+                    const data = doc.data();
+
+                    return {
+                        id: doc.id,
+                        ...data,
+                        lotes: (data.lotes || []).map(l => ({
+                            ...l,
+                            id: l.id.toString()
+                        }))
+                    };
+                });
                 setCampos(camposData);
                 if (camposData.length > 0 && !campoActivoId) {
                     setCampoActivoId(camposData[0].id);
@@ -60,22 +71,40 @@ export default function CamposPage() {
     };
 
     const handleAgregarRegistro = async (textoRecibido) => {
-        if (!loteSeleccionado || !campoActivoId) return;
+        if (!textoRecibido || !loteSeleccionado || !campoActivoId) return;
         
         const nuevoRegistro = {
             texto: textoRecibido,
             fecha: new Date().toLocaleString('es-AR'),
         };
-        await agregarRegistro(campoActivoId, loteSeleccionado, nuevoRegistro);
-        
-        const loteActualizado = { ...loteSeleccionado, info: [...(loteSeleccionado.info || []), nuevoRegistro] };
-        setLoteSeleccionado(loteActualizado);
-        setCampos(anteriores => anteriores.map(c => 
-            c.id === campoActivoId ? {
-                ...c,
-                lotes: c.lotes.map(l => l.id === loteSeleccionado.id ? loteActualizado : l)
-            } : c
-        ));
+
+        try {
+            await agregarRegistro(campoActivoId, loteSeleccionado.id, nuevoRegistro);
+
+            const loteActualizado = { 
+                ...loteSeleccionado, 
+                info: [...(loteSeleccionado.info || []), nuevoRegistro] 
+            };
+            setLoteSeleccionado(loteActualizado);
+
+            setCampos(prevCampos => 
+                prevCampos.map(campo => {
+                    if (campo.id !== campoActivoId) return campo;
+
+                    const lotesActualizados = campo.lotes.map(lote => 
+                        lote.id.toString() === loteSeleccionado.id.toString() 
+                            ? loteActualizado 
+                            : lote
+                    );
+
+                    return { ...campo, lotes: lotesActualizados };
+                })
+            );
+
+        } catch (error) {
+            console.error("Error al guardar registro:", error);
+            alert("No se pudo guardar el registro. Intente nuevamente.");
+        }
     };
 
     const handleImageChange = async (base64) => {
