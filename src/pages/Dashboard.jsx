@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/ui/Sidebar";
 import CamposPage from "./CamposPage";
 import Home from "./Home";
@@ -7,10 +8,15 @@ import Home from "./Home";
 export default function Dashboard() {
   const [activePage, setActivePage] = useState("campos");
   const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
-    window.location.href = "/";
+    try {
+        await logout();
+        navigate("/login"); 
+    } catch (error) {
+        console.error("Error al salir", error);
+    }
   };
 
   return (

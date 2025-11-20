@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 
 export default function SignUp() {
@@ -80,6 +80,13 @@ export default function SignUp() {
         >
           Registrarse
         </button>
+
+        <p className="text-sm text-center mt-3">
+          ¿Ya tenés cuenta?{" "}
+          <Link to="/login" className="text-blue-600 hover:underline">
+            Iniciar Sesión
+          </Link>
+        </p>
       </form>
     </div>
   );
