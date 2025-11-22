@@ -1,11 +1,13 @@
 import { confirmAction } from "../../services/confirmationService";
 import { eliminarCampo } from "../../api/camposApi";
+import { useToast } from "../../context/ToastProvider";
 
 export default function PageActions({ campos, setCampos, campoActivoId, setCampoActivoId, setLoteSeleccionado }) {
     
+    const { showToast } = useToast();
     const handleEliminarCampo = async () => {
         if (campos.length <= 1) {
-            alert("Debe haber al menos un campo.");
+            showToast("Debe haber al menos un campo.", "error");
             return;
         }
 
@@ -15,15 +17,21 @@ export default function PageActions({ campos, setCampos, campoActivoId, setCampo
         const mensaje = `¿Seguro que querés eliminar el campo "${campoActivo.nombre}"? Se borrarán todos sus lotes y registros.`;
         
         if (confirmAction(mensaje)) {
-            await eliminarCampo(campoActivo.id);
-            
-            setCampos(camposAnteriores => {
-                const nuevosCampos = camposAnteriores.filter(c => c.id !== campoActivo.id);
-                setCampoActivoId(nuevosCampos[0]?.id || null);
-                return nuevosCampos;
-            });
-
-            setLoteSeleccionado(null);
+            try{
+                await eliminarCampo(campoActivo.id);
+                
+                setCampos(camposAnteriores => {
+                    const nuevosCampos = camposAnteriores.filter(c => c.id !== campoActivo.id);
+                    setCampoActivoId(nuevosCampos[0]?.id || null);
+                    return nuevosCampos;
+                });
+    
+                setLoteSeleccionado(null);
+                showToast("Campo eliminado correctamente", "success");
+            } catch(error){
+                console.error("Error al eliminar el campo:", error);
+                showToast("Error al eliminar el campo", "error");
+            }
         }
     };
     

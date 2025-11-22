@@ -1,7 +1,7 @@
 import useAutoScroll from "../../hooks/useAutoScroll";
 import HistoryInput from "./HistoryInput";
 
-export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro}) {
+export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro, isSaving}) {
     const historialRef = useAutoScroll(loteSeleccionado?.info);
 
     if (!loteSeleccionado) {
@@ -30,7 +30,7 @@ export default function HistoryPanel({ loteSeleccionado, onAgregarRegistro}) {
                 )}
             </div>
             <h2 className="font-semibold text-neutral-gray700">Añadir nueva nota</h2>
-            <HistoryInput onGuardar={onAgregarRegistro} />
+            <HistoryInput onGuardar={onAgregarRegistro} isSaving={isSaving}/>
         </div>
     );
 }

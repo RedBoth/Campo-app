@@ -2,17 +2,21 @@ import { useState, useEffect } from "react";
 import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { db, auth } from "../firebase-config";
 import { agregarCampo, agregarRegistro, actualizarImagenCampo } from "../api/camposApi";
+import { useToast } from "../context/ToastProvider";
 import Tabs from "../components/ui/Tabs";
 import LotManager from "../components/lots/LotManager";
 import HistoryPanel from "../components/lots/HistoryPanel";
 import ImageUploader from "../components/ImageUploader";
 import PageActions from "../components/ui/PageActions";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 export default function CamposPage() {
     const [campos, setCampos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [campoActivoId, setCampoActivoId] = useState(null);
     const [loteSeleccionado, setLoteSeleccionado] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const { showToast } = useToast();
 
     useEffect(() => {
         const obtenerCampos = async () => {
@@ -62,12 +66,18 @@ export default function CamposPage() {
     };
 
     const handleNuevoCampo = async () => {
-        const nombre = `Campo ${campos.length + 1}`;
-        const nuevoDocRef = await agregarCampo(nombre);
-        const nuevoCampo = { id: nuevoDocRef.id, nombre, lotes: [] };
-        setCampos(anteriores => [...anteriores, nuevoCampo]);
-        setCampoActivoId(nuevoDocRef.id);
-        setLoteSeleccionado(null);
+        try {
+            const nombre = `Campo ${campos.length + 1}`;
+            const nuevoDocRef = await agregarCampo(nombre);
+            const nuevoCampo = { id: nuevoDocRef.id, nombre, lotes: [] };
+            setCampos(anteriores => [...anteriores, nuevoCampo]);
+            setCampoActivoId(nuevoDocRef.id);
+            setLoteSeleccionado(null);
+            showToast("Campo creado correctamente", "success");
+        } catch (error) {
+            console.error(error);
+            showToast("Error al crear el campo", "error");
+        }
     };
 
     const handleAgregarRegistro = async (textoRecibido) => {
@@ -77,6 +87,8 @@ export default function CamposPage() {
             texto: textoRecibido,
             fecha: new Date().toLocaleString('es-AR'),
         };
+
+        setIsSaving(true);
 
         try {
             await agregarRegistro(campoActivoId, loteSeleccionado.id, nuevoRegistro);
@@ -100,23 +112,35 @@ export default function CamposPage() {
                     return { ...campo, lotes: lotesActualizados };
                 })
             );
-
+            showToast("Registro guardado correctamente", "success");
         } catch (error) {
             console.error("Error al guardar registro:", error);
-            alert("No se pudo guardar el registro. Intente nuevamente.");
+            showToast("Error al guardar el registro", "error");
+        } finally {
+            setIsSaving(false);
         }
     };
 
     const handleImageChange = async (base64) => {
         if (!campoActivoId) return;
-        await actualizarImagenCampo(campoActivoId, base64);
-        setCampos(anteriores => anteriores.map(c => 
-            c.id === campoActivoId ? { ...c, imagen: base64 } : c
-        ));
+        try {
+            await actualizarImagenCampo(campoActivoId, base64);
+            setCampos(anteriores => anteriores.map(c => 
+                c.id === campoActivoId ? { ...c, imagen: base64 } : c
+            ));
+            showToast("Imagen actualizada", "success");
+        } catch (error) {
+            showToast("Error al subir imagen", "error");
+        }
     };
 
     if (loading) {
-        return <p className="text-neutral-gray700 text-center mt-10 text-lg">Cargando campos...</p>;
+        return (
+            <div className="flex flex-col items-center justify-center h-64">
+                <LoadingSpinner size="lg" color="border-primary" />
+                <p className="text-neutral-gray500 mt-4 animate-pulse">Cargando tus campos...</p>
+            </div>
+        );
     }
 
     const campoActivo = campos.find(c => c.id === campoActivoId);
@@ -144,6 +168,7 @@ export default function CamposPage() {
                     key={loteSeleccionado ? loteSeleccionado.id : 'ninguno'}
                     loteSeleccionado={loteSeleccionado}
                     onAgregarRegistro={handleAgregarRegistro}
+                    isSaving={isSaving}
                 />
             </div>
 

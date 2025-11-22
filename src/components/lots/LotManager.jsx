@@ -1,5 +1,6 @@
 import { confirmAction } from "../../services/confirmationService";
 import { agregarLote, eliminarLote } from "../../api/camposApi";
+import { useToast } from "../../context/ToastProvider";
 
 export default function LotManager({
   lotes,
@@ -10,6 +11,8 @@ export default function LotManager({
   onLoteClick,
   campos
 }) {
+  const { showToast } = useToast();
+
   const handleAgregarLote = async () => {
     const nombre = prompt("Nombre del nuevo lote:");
     if (!nombre) return;
@@ -32,10 +35,10 @@ export default function LotManager({
         );
         
         setLoteSeleccionado(nuevoLote);
-
+        showToast("Lote creado correctamente", "success");
     } catch (error) {
         console.error("Error al crear el lote:", error);
-        alert("No se pudo crear el lote.");
+        showToast("Error al crear el lote", "error");
     }
 };
 
@@ -44,19 +47,25 @@ export default function LotManager({
 
     const mensaje = `¿Seguro que querés eliminar el lote "${loteSeleccionado.nombre}"? Esta acción no se puede deshacer.`;
     if (confirmAction(mensaje)) {
-      await eliminarLote(campoActivoId, loteSeleccionado);
-
-      setCampos((camposPrev) =>
-        camposPrev.map((c) =>
-          c.id === campoActivoId
-            ? {
-                ...c,
-                lotes: c.lotes.filter((l) => l.id !== loteSeleccionado.id),
-              }
-            : c
-        )
-      );
-      setLoteSeleccionado(null);
+      try {
+        await eliminarLote(campoActivoId, loteSeleccionado);
+  
+        setCampos((camposPrev) =>
+          camposPrev.map((c) =>
+            c.id === campoActivoId
+              ? {
+                  ...c,
+                  lotes: c.lotes.filter((l) => l.id !== loteSeleccionado.id),
+                }
+              : c
+          )
+        );
+        setLoteSeleccionado(null);
+        showToast("Lote eliminado correctamente", "success");
+      } catch (error){
+        console.error("Error al eliminar el lote:", error);
+        showToast("Error al eliminar el lote", "error");
+      }
     }
   };
 
@@ -68,7 +77,7 @@ export default function LotManager({
         Lotes en "{campoActivo?.nombre}"
       </h2>
 
-      <div className="flex flex-col gap-2 mb-4">
+      <div className="flex flex-col gap-2 mb-4 overflow-y-auto flex-grow max-h-[400px]">
         {lotes.map((lote) => {
           const isSelected = loteSeleccionado?.id === lote.id;
           return (
@@ -86,6 +95,11 @@ export default function LotManager({
             </button>
           );
         })}
+        {lotes.length === 0 && (
+            <p className="text-neutral-gray500 text-sm mt-2">
+                No hay lotes en este campo. ¡Creá uno!
+            </p>
+        )}
       </div>
 
       <div className="flex gap-2 mt-auto">
