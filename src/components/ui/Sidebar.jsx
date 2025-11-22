@@ -17,7 +17,6 @@ export default function Sidebar({ onNavigate, currentUser }) {
   return (
     <aside className="fixed top-0 left-0 w-64 bg-neutral-dark text-neutral-light flex flex-col h-screen border-r-2 border-neutral-gray300">
       
-      {/* Logo y título */}
       <div className="p-6">
         <h1 className="text-4xl font-bold text-neutral-gray900">
           Lote<span className="text-primary">Pro</span>
@@ -25,7 +24,6 @@ export default function Sidebar({ onNavigate, currentUser }) {
         <p className="text-lg text-neutral-gray500">Gestión de campos</p>
       </div>
 
-      {/* Navegación */}
       <nav className="flex-grow px-4">
         <p className="px-2 pt-4 pb-2 text-sm text-neutral-gray500 uppercase tracking-wider">
           Navegacion
@@ -53,7 +51,6 @@ export default function Sidebar({ onNavigate, currentUser }) {
         </ul>
       </nav>
 
-      {/* Usuario */}
       <div className="p-4 border-t border-neutral-gray300">
         <div className="flex items-center">
           <img
@@ -67,7 +64,6 @@ export default function Sidebar({ onNavigate, currentUser }) {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="p-4 text-xs text-neutral-gray500/70 border-t border-neutral-gray300">
         © 2025 Mauro Kolman
       </div>

@@ -1,6 +1,6 @@
-import { confirmAction } from "../../services/confirmationService";
 import { agregarLote, eliminarLote } from "../../api/camposApi";
 import { useToast } from "../../context/ToastProvider";
+import { useDialog } from "../../context/DialogProvider";
 
 export default function LotManager({
   lotes,
@@ -12,9 +12,10 @@ export default function LotManager({
   campos
 }) {
   const { showToast } = useToast();
+  const { showPrompt, showConfirm } = useDialog();
 
   const handleAgregarLote = async () => {
-    const nombre = prompt("Nombre del nuevo lote:");
+    const nombre = await showPrompt("Nuevo Lote", "Ingresá el nombre del nuevo lote:");
     if (!nombre) return;
 
     try {
@@ -45,8 +46,11 @@ export default function LotManager({
   const handleEliminarLote = async () => {
     if (!loteSeleccionado) return;
 
-    const mensaje = `¿Seguro que querés eliminar el lote "${loteSeleccionado.nombre}"? Esta acción no se puede deshacer.`;
-    if (confirmAction(mensaje)) {
+    const confirmado = await showConfirm(
+        "Eliminar Lote", 
+        `¿Seguro que querés eliminar el lote "${loteSeleccionado.nombre}"? Esta acción no se puede deshacer.`
+    );
+    if (confirmado) {
       try {
         await eliminarLote(campoActivoId, loteSeleccionado);
   

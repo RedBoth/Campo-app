@@ -1,10 +1,12 @@
-import { confirmAction } from "../../services/confirmationService";
 import { eliminarCampo } from "../../api/camposApi";
 import { useToast } from "../../context/ToastProvider";
+import { useDialog } from "../../context/DialogProvider";
 
 export default function PageActions({ campos, setCampos, campoActivoId, setCampoActivoId, setLoteSeleccionado }) {
     
     const { showToast } = useToast();
+    const { showConfirm } = useDialog();
+
     const handleEliminarCampo = async () => {
         if (campos.length <= 1) {
             showToast("Debe haber al menos un campo.", "error");
@@ -14,9 +16,12 @@ export default function PageActions({ campos, setCampos, campoActivoId, setCampo
         const campoActivo = campos.find(c => c.id === campoActivoId);
         if (!campoActivo) return;
 
-        const mensaje = `¿Seguro que querés eliminar el campo "${campoActivo.nombre}"? Se borrarán todos sus lotes y registros.`;
+        const confirmado = await showConfirm(
+            "Eliminar Campo",
+            `¿Seguro que querés eliminar el campo "${campoActivo.nombre}"? Se borrarán todos sus lotes y registros.` // Mensaje
+        );
         
-        if (confirmAction(mensaje)) {
+        if (confirmado) {
             try{
                 await eliminarCampo(campoActivo.id);
                 

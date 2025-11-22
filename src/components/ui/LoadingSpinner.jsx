@@ -1,5 +1,4 @@
 export default function LoadingSpinner({ size = "md", color = "border-white" }) {
-  // Mapas de tamaños para hacerlo flexible
   const sizes = {
     sm: "h-4 w-4",
     md: "h-6 w-6",
