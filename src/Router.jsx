@@ -15,14 +15,14 @@ export default function Router() {
 
         <Route
           path="/"
-          element={ currentUser ? <Navigate to="/campos" /> : <Navigate to="/login" /> }
+          element={ currentUser ? <Navigate to="/dashboard" /> : <Navigate to="/login" /> }
         />
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
         <Route
-          path="/campos"
+          path="/dashboard"
           element={
             <ProtectedRoute user={currentUser}>
               <Dashboard />

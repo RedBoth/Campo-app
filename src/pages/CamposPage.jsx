@@ -130,6 +130,7 @@ export default function CamposPage() {
             ));
             showToast("Imagen actualizada", "success");
         } catch (error) {
+            console.error(error);
             showToast("Error al subir imagen", "error");
         }
     };

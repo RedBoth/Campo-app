@@ -1,22 +1,31 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
+import { useToast } from "../context/ToastProvider"
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
       await login(email, password);
       navigate("/campos");
     } catch (err) {
+      console.error(err);
       setError("Email o contraseña incorrectos");
+      showToast("Error al iniciar sesión", "error");
+      setLoading(false);
     }
   };
   
@@ -37,6 +46,7 @@ export default function Login() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          disabled={loading}
           className="w-full p-2 mb-3 border rounded"
         />
 
@@ -45,14 +55,28 @@ export default function Login() {
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          disabled={loading}
           className="w-full p-2 mb-3 border rounded"
         />
 
         <button
-          type="submit"
-          className="w-full bg-primary text-white py-2 rounded hover:bg-blue-700"
-        >
-          Entrar
+            type="submit"
+            disabled={loading || !email || !password}
+            className={`w-full py-2 rounded text-white font-medium flex items-center justify-center gap-2 transition-all
+              ${
+                loading || !email || !password
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-primary hover:bg-blue-700 shadow-md active:scale-95"
+              }`}
+          >
+            {loading ? (
+              <>
+                <LoadingSpinner size="sm" color="border-white" />
+                <span>Entrando...</span>
+              </>
+            ) : (
+              "Entrar"
+            )}
         </button>
         <p className="text-sm text-center mt-3">
           ¿No tenés cuenta?{" "}
