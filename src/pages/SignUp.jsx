@@ -24,7 +24,7 @@ export default function SignUp() {
 
     try {
       await signup(email, password, nombre, apellido);
-      navigate("/campos");
+      navigate("/dashboard");
 
     } catch (err) {
       console.error(err);

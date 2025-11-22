@@ -3,6 +3,7 @@ import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { db, auth } from "../firebase-config";
 import { agregarCampo, agregarRegistro, actualizarImagenCampo } from "../api/camposApi";
 import { useToast } from "../context/ToastProvider";
+import { useDialog } from "../context/DialogProvider";
 import Tabs from "../components/ui/Tabs";
 import LotManager from "../components/lots/LotManager";
 import HistoryPanel from "../components/lots/HistoryPanel";
@@ -17,6 +18,7 @@ export default function CamposPage() {
     const [loteSeleccionado, setLoteSeleccionado] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
     const { showToast } = useToast();
+    const { showPrompt } = useDialog();
 
     useEffect(() => {
         const obtenerCampos = async () => {
@@ -66,8 +68,9 @@ export default function CamposPage() {
     };
 
     const handleNuevoCampo = async () => {
+        const nombre = await showPrompt("Nuevo Campo", "Ingresá el nombre de tu nuevo campo:");
+        if (!nombre) return;
         try {
-            const nombre = `Campo ${campos.length + 1}`;
             const nuevoDocRef = await agregarCampo(nombre);
             const nuevoCampo = { id: nuevoDocRef.id, nombre, lotes: [] };
             setCampos(anteriores => [...anteriores, nuevoCampo]);

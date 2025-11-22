@@ -20,7 +20,7 @@ export default function Login() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate("/campos");
+      navigate("/dashboard");
     } catch (err) {
       console.error(err);
       setError("Email o contraseña incorrectos");
