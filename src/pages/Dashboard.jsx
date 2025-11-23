@@ -6,7 +6,7 @@ import CamposPage from "./CamposPage";
 import Home from "./Home";
 
 export default function Dashboard() {
-  const [activePage, setActivePage] = useState("campos");
+  const [activePage, setActivePage] = useState("inicio");
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -21,14 +21,16 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen flex bg-neutral-gray ml-64">
-      {/* Sidebar fija a la izquierda */}
       <Sidebar onNavigate={setActivePage} currentUser={currentUser}/>
 
-      {/* Contenedor principal */}
       <div className="flex-1 flex flex-col">
-        {/* Header dentro del área principal */}
         <header className="flex justify-between items-center bg-neutral-white shadow-sm p-6 border-b-2 border-neutral-gray300">
-          {activePage === "inicio" && "Inicio"}
+          {activePage === "inicio" &&  (
+              <div className="flex items-center gap-2 text-neutral-gray500">
+                  <span className="material-icons-outlined">home</span>
+                  <span className="text-sm font-medium"> Inicio</span>
+              </div>
+          )}
           {activePage === "campos" && (
             <div>
               <h2 className="text-3xl font-bold text-neutral-gray900">Gestión de campos y lotes</h2>

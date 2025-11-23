@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function Sidebar({ onNavigate, currentUser }) {
-  const [activeItem, setActiveItem] = useState("campos");
+  const [activeItem, setActiveItem] = useState("inicio");
 
   const navItems = [
     { id: "inicio", label: "Inicio", icon: "home" },
