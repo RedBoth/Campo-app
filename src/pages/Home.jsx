@@ -85,7 +85,7 @@ export default function Home() {
     });
   }, []);
 
-  const firstName = currentUser?.displayName?.split(" ")[0] || "Usuario";
+  const firstName = currentUser?.nombre || "Usuario";
 
   return (
     <div className="space-y-8 animate-fade-in">
