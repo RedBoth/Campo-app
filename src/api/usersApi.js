@@ -20,20 +20,19 @@ export const getUserProfile = async (uid) => {
 
 /**
  * Actualiza tanto el perfil de Auth (displayName) como el documento en Firestore.
- * @param {object} user - El objeto currentUser de Auth.
  * @param {string} nombre 
  * @param {string} apellido 
  */
-export const updateUserProfile = async (user, nombre, apellido) => {
+export const updateUserProfile = async (userFromContext, nombre, apellido) => {
+    const user = auth.currentUser;
+    if (!user) throw new Error("No hay sesión activa en Firebase Auth.");
+
     const fullName = `${nombre.trim()} ${apellido.trim()}`;
 
-    // 1. Actualizar en Firebase Auth (Para que el Sidebar se actualice rápido)
     await updateProfile(user, {
         displayName: fullName,
     });
 
-    // 2. Actualizar en Firestore (Para persistencia de datos estructurados)
-    // Usamos setDoc con {merge: true} para crear si no existe o actualizar si existe
     const userRef = doc(db, "users", user.uid);
     await setDoc(userRef, {
         nombre: nombre.trim(),
