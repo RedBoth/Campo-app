@@ -155,7 +155,7 @@ export default function SettingsPage() {
                 className={`px-4 py-2 border rounded-lg text-sm font-medium transition
                     ${resetSent 
                         ? "bg-green-50 text-green-700 border-green-200" 
-                        : "bg-white text-neutral-gray700 border-neutral-gray300 hover:bg-gray-50"
+                        : "bg-white text-neutral-gray700 border-neutral-gray300 hover:bg-neutral-gray100"
                     }`}
             >
                 {resetSent ? "Correo Enviado" : "Cambiar contraseña"}

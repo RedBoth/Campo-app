@@ -173,6 +173,7 @@ export default function CamposPage() {
                     loteSeleccionado={loteSeleccionado}
                     onAgregarRegistro={handleAgregarRegistro}
                     isSaving={isSaving}
+                    campoNombre={campoActivo?.nombre}
                 />
             </div>
 
