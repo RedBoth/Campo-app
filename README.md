@@ -1,12 +1,89 @@
-# React + Vite
+# 🌾 Campo-app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **Una solución digital para la gestión eficiente del campo.**
 
-Currently, two official plugins are available:
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Version](https://img.shields.io/badge/version-1.0.0-orange)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📖 Descripción
 
-## Expanding the ESLint configuration
+**Campo-app** es una aplicación diseñada para facilitar el monitoreo de cultivos. Nuestro objetivo es brindar a los productores herramientas sencillas para tomar decisiones basadas en datos.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 🚀 Funcionalidades Principales
+
+* ✅ **Gestión de Lotes:** Visualiza y administra el estado de tus parcelas.
+* ✅ **Registro de Actividades:** Lleva un control de siembra, cosecha y tratamientos.
+* ✅ **Reportes:** Exporta datos a PDF/Excel.
+* *Agrega aquí más funcionalidades específicas de tu app.*
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+Este proyecto está construido con las siguientes herramientas:
+
+* **Frontend:** React
+* **Backend:** Node.js, Firebase
+* **Base de Datos:** Firestore
+
+---
+
+## 📸 Capturas de Pantalla
+
+| Inicio | Gestión de Lotes | Reportes |
+|:---:|:---:|:---:|
+| ![Home](./assets/inicio.png) | ![Lotes](./assets/campos.png) | ![Reportes](./assets/reporte.png) |
+
+---
+
+## 🔧 Instalación y Configuración
+
+Sigue estos pasos para correr el proyecto localmente:
+
+### Prerrequisitos
+* Git
+* Node.js
+
+### Pasos
+
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone https://github.com/RedBoth/Campo-app.git
+    cd Campo-app
+    ```
+
+2.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
+
+3.  **Configurar variables de entorno:**
+    Crea un archivo `.env` basado en el `.env.example` y configura tus claves (API Keys, DB, etc.).
+
+4.  **Ejecutar la aplicación:**
+    ```bash
+    npm run dev
+    ```
+
+---
+
+## 🤝 Contribución
+
+¡Las contribuciones son bienvenidas! Si deseas mejorar Campo-app:
+
+1.  Haz un Fork del proyecto.
+2.  Crea una rama para tu funcionalidad (`git checkout -b feature/nueva-funcionalidad`).
+3.  Haz Commit de tus cambios (`git commit -m 'Agrega nueva funcionalidad'`).
+4.  Haz Push a la rama (`git push origin feature/nueva-funcionalidad`).
+5.  Abre un Pull Request.
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT - mira el archivo [LICENSE.md](LICENSE) para más detalles.
+
+---
+
+⌨️ con ❤️ por [RedBoth](https://github.com/RedBoth)
