@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -23,12 +24,12 @@ export function AuthProvider({ children }) {
         try {
           const userRef = doc(db, "users", user.uid);
           const userSnap = await getDoc(userRef);
-
           const userData = userSnap.exists() ? userSnap.data() : {};
 
           setCurrentUser({
             uid: user.uid,
             email: user.email,
+            photoURL: user.photoURL,
             ...userData,
           });
 
@@ -65,11 +66,19 @@ export function AuthProvider({ children }) {
 
   const logout = () => signOut(auth);
 
-  const value = { currentUser, login, signup, logout };
+  const value = { currentUser, login, signup, logout, loading };
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-100">
+        <LoadingSpinner size="lg" color="border-primary" />
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 }

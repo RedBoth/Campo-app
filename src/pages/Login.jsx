@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-import { useToast } from "../context/ToastProvider"
+import { useToast } from "../context/ToastProvider";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 export default function Login() {
@@ -10,9 +10,15 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { login, currentUser } = useAuth(); 
   const navigate = useNavigate();
   const { showToast } = useToast();
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/dashboard");
+    }
+  }, [currentUser, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,7 +26,6 @@ export default function Login() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate("/dashboard");
     } catch (err) {
       console.error(err);
       setError("Email o contraseña incorrectos");
@@ -28,18 +33,23 @@ export default function Login() {
       setLoading(false);
     }
   };
-  
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 relative">
+      
+      {loading && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <LoadingSpinner size="lg" color="border-primary" /> 
+        </div>
+      )}
+
       <form
         onSubmit={handleLogin}
         className="bg-white p-6 rounded-xl shadow-md w-80"
       >
         <h2 className="text-xl font-bold mb-4">Iniciar Sesión</h2>
 
-        {error && (
-          <p className="text-red-600 text-sm mb-2">{error}</p>
-        )}
+        {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
 
         <input
           type="email"
@@ -60,23 +70,23 @@ export default function Login() {
         />
 
         <button
-            type="submit"
-            disabled={loading || !email || !password}
-            className={`w-full py-2 rounded text-white font-medium flex items-center justify-center gap-2 transition-all
-              ${
-                loading || !email || !password
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-primary hover:bg-blue-700 shadow-md active:scale-95"
-              }`}
-          >
-            {loading ? (
-              <>
-                <LoadingSpinner size="sm" color="border-white" />
-                <span>Entrando...</span>
-              </>
-            ) : (
-              "Entrar"
-            )}
+          type="submit"
+          disabled={loading || !email || !password}
+          className={`w-full py-2 rounded text-white font-medium flex items-center justify-center gap-2 transition-all
+            ${
+              loading || !email || !password
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-primary hover:bg-blue-700 shadow-md active:scale-95"
+            }`}
+        >
+          {loading ? (
+            <>
+              <LoadingSpinner size="sm" color="border-white" />
+              <span>Entrando...</span>
+            </>
+          ) : (
+            "Entrar"
+          )}
         </button>
         <p className="text-sm text-center mt-3">
           ¿No tenés cuenta?{" "}

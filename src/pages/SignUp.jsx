@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { useToast } from "../context/ToastProvider";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 export default function SignUp() {
-  const { signup } = useAuth();
+  const { signup, currentUser } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -17,6 +17,12 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/dashboard");
+    }
+  }, [currentUser, navigate]);
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
@@ -24,8 +30,6 @@ export default function SignUp() {
 
     try {
       await signup(email, password, nombre, apellido);
-      navigate("/dashboard");
-
     } catch (err) {
       console.error(err);
       let mensajeError = "Error al registrarse.";
