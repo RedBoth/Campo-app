@@ -6,14 +6,18 @@ import LoadingSpinner from "../components/ui/LoadingSpinner";
 import campoImg from "../assets/campo-login.webp";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const { login, currentUser } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  
+  const [globalError, setGlobalError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -21,25 +25,92 @@ export default function Login() {
     }
   }, [currentUser, navigate]);
 
+  const validate = (fieldValues = { email, password }) => {
+    let tempErrors = { ...errors };
+
+    if ("email" in fieldValues) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      tempErrors.email = emailRegex.test(fieldValues.email) 
+        ? "" 
+        : "Formato de email inválido";
+      if (fieldValues.email === "") tempErrors.email = "El email es requerido";
+    }
+
+    if ("password" in fieldValues) {
+      tempErrors.password = fieldValues.password ? "" : "La contraseña es requerida";
+    }
+
+    setErrors({ ...tempErrors });
+
+    if (fieldValues === email && fieldValues === password){
+        return Object.values(tempErrors).every((x) => x === "");
+    }
+    return Object.values(tempErrors).every((x) => x === "");
+  };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    if (id === "email") setEmail(value);
+    if (id === "password") setPassword(value);
+
+    validate({ [id]: value });
+  };
+
+  const handleBlur = (e) => {
+    const { id } = e.target;
+    setTouched({ ...touched, [id]: true });
+    if (id === "email") validate({ email });
+    if (id === "password") validate({ password });
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+    setGlobalError("");
+    
+    setTouched({
+      email: true,
+      password: true
+    });
+
+    const formValues = { email, password };
+    const isValid = validate(formValues) && Object.values(errors).every(x => x === "");
+
+    if (!isValid) {
+      return; 
+    }
+
     setLoading(true);
     try {
       await login(email, password);
     } catch (err) {
       console.error(err);
-      setError("Email o contraseña incorrectos");
-      showToast("Error al iniciar sesión", "error");
+      let mensajeError = "Error al iniciar sesión.";
+      
+      if (err.code === "auth/invalid-credential" || err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+        mensajeError = "Email o contraseña incorrectos.";
+      } else if (err.code === "auth/too-many-requests") {
+        mensajeError = "Demasiados intentos. Intenta más tarde.";
+      }
+
+      setGlobalError(mensajeError);
+      showToast(mensajeError, "error");
       setLoading(false);
     }
   };
 
+  const getInputClass = (fieldName) => {
+    const hasError = errors[fieldName] && touched[fieldName];
+    const baseClass = "w-full p-3 border rounded-lg transition duration-150 focus:outline-none focus:ring-2";
+    
+    if (hasError) {
+        return `${baseClass} border-red-500 bg-red-50 focus:ring-red-500 text-red-900 placeholder-red-300`;
+    }
+    return `${baseClass} border-neutral-gray300 focus:ring-primary focus:border-primary`;
+  };
+
   return (
-    // CAMBIO 1: Contenedor principal de dos columnas
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
       
-      {/* Columna Estética (oculta en móvil, visible en escritorio) */}
       <div className="hidden lg:flex items-center justify-center bg-neutral-gray300 relative overflow-hidden">
         <img 
           src={campoImg} 
@@ -51,24 +122,22 @@ export default function Login() {
             <span className="text-neutral-gray700">Lote</span>
             <span className="text-primary">Pro</span>
           </h1>
-          <p className="text-xl text-gray-500 font-semibold drop-shadow-sm">
+          <p className="text-xl text-neutral-gray700 font-semibold drop-shadow-sm">
             Tu gestión de campos, simplificada.
           </p>
         </div>
       </div>
 
-      {/* Columna del Formulario */}
       <div className="flex items-center justify-center relative p-4 bg-neutral-white">
         
         {loading && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <LoadingSpinner size="lg" color="border-primary" />
+            <LoadingSpinner size="lg" color="border-neutral-white" />
           </div>
         )}
 
         <div className="w-full max-w-md p-8 sm:p-10 bg-neutral-white rounded-2xl shadow-xl border border-neutral-gray300">
           
-          {/* CAMBIO 3: Logo en móvil y encabezado */}
           <h1 className="text-5xl font-extrabold mb-2 text-center lg:hidden">
             <span className="text-neutral-gray700">Lote</span>
             <span className="text-primary">Pro</span>
@@ -78,9 +147,10 @@ export default function Login() {
           </h2>
 
           <form onSubmit={handleLogin}>
-            {error && (
-              <p className="text-danger text-sm mb-4 p-2 bg-softdanger rounded-lg border border-red-200">
-                {error}
+            
+            {globalError && (
+              <p className="text-danger text-sm mb-4 p-2 bg-softdanger rounded-lg border border-red-200 animate-pulse">
+                {globalError}
               </p>
             )}
 
@@ -91,10 +161,14 @@ export default function Login() {
                 type="email"
                 placeholder="ejemplo@lote.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleChange}
+                onBlur={handleBlur}
                 disabled={loading}
-                className="w-full p-3 border border-neutral-gray300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition duration-150"
+                className={getInputClass("email")}
               />
+              {errors.email && touched.email && (
+                <p className="text-red-500 text-xs mt-1 ml-1">{errors.email}</p>
+              )}
             </div>
 
             <div className="mb-6">
@@ -104,19 +178,22 @@ export default function Login() {
                 type="password"
                 placeholder="********"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleChange}
+                onBlur={handleBlur}
                 disabled={loading}
-                className="w-full p-3 border border-neutral-gray300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition duration-150"
+                className={getInputClass("password")}
               />
+              {errors.password && touched.password && (
+                <p className="text-red-500 text-xs mt-1 ml-1">{errors.password}</p>
+              )}
             </div>
 
             <button
               type="submit"
-              disabled={loading || !email || !password}
-              // CAMBIO 4: Botón con color principal y efecto de elevación
+              disabled={loading}
               className={`w-full py-3 rounded-lg text-neutral-white font-semibold flex items-center justify-center gap-2 transition-all duration-200 shadow-md 
                 ${
-                  loading || !email || !password
+                  loading
                     ? "bg-neutral-gray300 cursor-not-allowed"
                     : "bg-primary hover:bg-secondary active:scale-[0.98] shadow-primary/50"
                 }`}
