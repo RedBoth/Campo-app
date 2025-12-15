@@ -60,6 +60,14 @@ Sigue estos pasos para correr el proyecto localmente:
 
 3.  **Configurar variables de entorno:**
     Crea un archivo `.env` basado en el `.env.example` y configura tus claves (API Keys, DB, etc.).
+    ```bash
+    VITE_FIREBASE_API_KEY=""
+    VITE_FIREBASE_AUTH_DOMAIN=""
+    VITE_FIREBASE_PROJECT_ID=""
+    VITE_FIREBASE_STORAGE_BUCKET=""
+    VITE_FIREBASE_MESSAGING_SENDER_ID=""
+    VITE_FIREBASE_APP_ID=""
+    ```
 
 4.  **Ejecutar la aplicación:**
     ```bash
