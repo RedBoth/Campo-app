@@ -15,7 +15,6 @@
 * ✅ **Gestión de Lotes:** Visualiza y administra el estado de tus parcelas.
 * ✅ **Registro de Actividades:** Lleva un control de siembra, cosecha y tratamientos.
 * ✅ **Reportes:** Exporta datos a PDF/Excel.
-* *Agrega aquí más funcionalidades específicas de tu app.*
 
 ---
 
